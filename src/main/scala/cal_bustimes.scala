@@ -10,16 +10,16 @@ object cal_bustimes {
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     import sqlContext.implicits._
-    val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2016*").map(s => s.split(","))
-      .filter(s => s(2) == "B689" || s(2) == "M312" || s(2) == "M454" || s(2) == "M441" || s(2) == "M483")
+    val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2017-*").map(s => s.split("\t"))
+      .filter(s => s(6) == "B689" || s(6) == "M312" || s(6) == "M454" || s(6) == "M441" || s(6) == "M483")
       .map(s => {
-        if( s(5).substring(14,15) == "0" || s(5).substring(14,15) == "1" || s(5).substring(14,15) == "2"){
-          s(5) = s(5).substring(11,14) + "00:00"
-        }else if( s(5).substring(14,15) == "3" || s(5).substring(14,15) == "4" || s(5).substring(14,15) == "5"){
-          s(5) = s(5).substring(11,14) + "30:00"
+        if( s(10).substring(14,15) == "0" || s(10).substring(14,15) == "1" || s(10).substring(14,15) == "2"){
+          s(10) = s(10).substring(11,14) + "00:00"
+        }else if( s(10).substring(14,15) == "3" || s(10).substring(14,15) == "4" || s(10).substring(14,15) == "5"){
+          s(10) = s(10).substring(11,14) + "30:00"
         }
-        (s(0),s(1),s(2),s(3),s(5),s(6),s(15).toDouble)})
-      .toDF("id","day","line","carId","timeO","timeD","sum")
-      .groupBy("line","timeO").count().show
+        (s(0),s(1),s(6),s(3),s(10))})
+      .toDF("id","day","line","carId","timeO")
+      .groupBy("line","timeO").count().sort("line").repartition(1).write.csv("F:\\北斗\\公交新线开通\\输出文件\\2017busround")
   }
 }
