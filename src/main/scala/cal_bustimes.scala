@@ -14,9 +14,9 @@ object cal_bustimes {
       .filter(s => s(2) == "B689" || s(2) == "M312" || s(2) == "M454" || s(2) == "M441" || s(2) == "M483")
       .map(s => {
         if( s(5).substring(14,15) == "0" || s(5).substring(14,15) == "1" || s(5).substring(14,15) == "2"){
-          s(5) = s(5).substring(0,14) + "00:00"
+          s(5) = s(5).substring(11,14) + "00:00"
         }else if( s(5).substring(14,15) == "3" || s(5).substring(14,15) == "4" || s(5).substring(14,15) == "5"){
-          s(5) = s(5).substring(0,14) + "30:00"
+          s(5) = s(5).substring(11,14) + "30:00"
         }
         (s(0),s(1),s(2),s(3),s(5),s(6),s(15).toDouble)})
       .toDF("id","day","line","carId","timeO","timeD","sum")
