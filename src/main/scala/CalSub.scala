@@ -45,4 +45,5 @@ object CalSub {
   }
 }
 
-//myname id kim, I'm your master
+//myname is kim, I'm your master.
+//I know it, so who am I.
