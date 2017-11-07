@@ -44,11 +44,7 @@ object CalSub {
     }
   }
 }
-<<<<<<< HEAD
 
-//myname is kim, I'm your master.
-//I know it, so who am I.
-=======
 //where are you?
-//myname id kim, I'm your master
->>>>>>> e317b6c34e71ea5d6d0a934afba2ca9802cf5aa9
+//myname is kim, I'm your master
+//so who am I? 
