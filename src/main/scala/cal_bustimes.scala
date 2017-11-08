@@ -1,3 +1,5 @@
+import javax.ws.rs.DefaultValue
+
 import org.apache.spark
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql
@@ -23,3 +25,5 @@ object cal_bustimes {
       .groupBy("line","timeO").count().sort("line").repartition(1).write.csv("F:\\北斗\\公交新线开通\\输出文件\\2017busround")
   }
 }
+
+
