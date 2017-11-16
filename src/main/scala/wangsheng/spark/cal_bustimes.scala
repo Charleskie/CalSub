@@ -1,9 +1,6 @@
-import javax.ws.rs.DefaultValue
-
-import org.apache.spark
+package wangsheng.spark
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.sql
-import org.apache.spark.sql.{SQLContext, SparkSession}
 
 
 object cal_bustimes {

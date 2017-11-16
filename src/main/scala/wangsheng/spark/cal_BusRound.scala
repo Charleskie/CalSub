@@ -1,9 +1,5 @@
-import org.apache.spark
+package wangsheng.spark
 import org.apache.spark.{SparkConf, SparkContext}
-import org.apache.spark.SparkContext._
-import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.SparkSession
-import scala.collection.mutable.ArrayBuffer
 
 
 object cal_BusRound {
