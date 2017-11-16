@@ -2,6 +2,7 @@ import org.apache.spark
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql
 import org.apache.spark.sql.{SQLContext, SparkSession}
+import wangsheng.spark.timeformat._
 
 
 object cal_stationFlow {
@@ -24,7 +25,8 @@ object cal_stationFlow {
         }else if((s(5).substring(11,13) == "17" || s(5).substring(11,13) == "18" || s(5).substring(11,13) == "19") || (s(5).substring(11,13) == "16" && (s(5).substring(14,15) == "3" || s(5).substring(14,15) == "4" || s(5).substring(14,15) == "5"))){
           s(5) = "eve"
         }else{ s(5) = "flat" }
-        val time = s(5)
+        val time1 = isTime(s(5))
+        val time = changetime(s(5),5)
         val stationO = s(7)
         val stationD = s(s.length - 4)
         (cardId,line,day,time,stationO,stationD)
@@ -33,4 +35,7 @@ object cal_stationFlow {
     val Dflow = data.groupBy("line","time","stationD").count().repartition(1).write.csv(outpath + "/Dflow")
     val ODflow = data.groupBy("line","time","stationO","stationD").count().repartition(1).write.csv(outpath + "/ODflow")
   }
+
+
+
 }
