@@ -23,7 +23,6 @@ object test {
     println(CustomFormatToISO(time))
     println(CustomFormatToISO(time1))
     println(CustomFormatToISO(time2))
-
-
+    
   }
 }

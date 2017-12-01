@@ -23,8 +23,8 @@ object timeformat {
   /***
     * 2016-06-01 17:49:05
     * 20170602073442
-    * @param time
-    * @return
+    * @param time 普通格式的时间
+    * @return ISO格式的时间
     * 2016-06-02T00:05:05.000Z
     */
 
@@ -37,7 +37,7 @@ object timeformat {
     var min = "" 
     var sec = ""
     val mark = ".000Z"
-    if(time.split(" ").length == 1 && time.contains("-")){
+    if(time.split(" ").length == 1 && time.split("T").length == 1){
       year = time.substring(0,4)
       month = time.substring(4,6)
       date = time.substring(6,8)
@@ -55,7 +55,7 @@ object timeformat {
     * 
     * @param time ISO时间格式
     * @param num  以num分钟间隔
-    * @return
+    * @return 返回按num分钟间隔之后的时间
     */
 
   def changetime(time: String, num: Int): String = {

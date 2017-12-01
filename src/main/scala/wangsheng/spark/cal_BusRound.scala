@@ -1,6 +1,6 @@
 package wangsheng.spark
 import org.apache.spark.{SparkConf, SparkContext}
-
+import wangsheng.spark.timeformat._
 
 object cal_BusRound {
   def main(args: Array[String]): Unit = {
@@ -35,14 +35,10 @@ object cal_BusRound {
 ////    }
 
     val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2017-07").map(s => s.split("\t"))
-      .filter(s => s(6) == "B689" || s(6) == "M312" || s(6) == "M454" || s(6) == "M441" || s(6) == "M483")
+      .filter(s => s(6) == "204" || s(6) == "369" || s(6) == "M371" || s(6) == "M483" || s(6) == "74")
       .map(s => {
-        if((s(5).substring(11,13) == "07" || s(5).substring(11,13) == "08") || (s(5).substring(11,13) == "09" && (s(5).substring(14,15) == "0" || s(5).substring(14,15) == "1" || s(5).substring(14,15) == "2"))){
-          s(5) = "mor"
-        }else if((s(5).substring(11,13) == "17" || s(5).substring(11,13) == "18" || s(5).substring(11,13) == "19") || (s(5).substring(11,13) == "16" && (s(5).substring(14,15) == "3" || s(5).substring(14,15) == "4" || s(5).substring(14,15) == "5"))){
-          s(5) = "eve"
-        }else{ s(5) = "flat" }
-        s(0)+","+s(1)+","+s(6)+","+s(3)+","+s(4)+","+","+s(15)
+        val time = isTime(CustomFormatToISO(s(5)))
+        s(0)+","+s(1)+","+s(6)+","+s(3)+","+s(4)+","+ time + ","+s(15)
       }).map(s => s.split(","))
       //      .map(s => s(2)+","+s(5)+","+s(6)).map(s => s.split(",")).groupBy(s => s(0)+","+s(1)).map(s => {
       //          val lineandtime = s._1
