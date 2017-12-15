@@ -1,51 +1,31 @@
 package wangsheng.spark
 import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.SQLContext
 import wangsheng.spark.timeformat._
 
 object cal_BusRound {
   def main(args: Array[String]): Unit = {
     //    val spark = SparkSession.builder().appName("GPS").master("local[*]").config("spark.sql.warehouse.dir", "E:/spark/wangsheng/spark-warehouse")
     //      .getOrCreate()
-    val conf = new SparkConf().setAppName("GPS").setMaster("local")
+    val conf = new SparkConf().setAppName("GPS").setMaster("local").set("spark.sql.warehouse.dir","E:\\迅雷下载\\spark-2.0.0-bin-hadoop2.7")
     val sc = new SparkContext(conf)
-//    for(i <- 1 to 30) {
-//      var path = "2016-06-"
-//      if(i < 10){
-//        path = path + "0$i"
-//      }else {
-//        path = path + "$i"
-//      }
-//      val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2016-06").map(s => s.split(","))
-//        .filter(s => s(2) == "B689" || s(2) == "M312" || s(2) == "M454" || s(2) == "M441" || s(2) == "M483")
-//          .map(s => {
-//            if((s(5).substring(11,13) == "07" || s(5).substring(11,13) == "08") || (s(5).substring(11,13) == "09" && (s(5).substring(14,15) == "0" || s(5).substring(14,15) == "1" || s(5).substring(14,15) == "2"))){
-//              s(5) = "mor"
-//            }else if((s(5).substring(11,13) == "17" || s(5).substring(11,13) == "18" || s(5).substring(11,13) == "19") || (s(5).substring(11,13) == "16" && (s(5).substring(14,15) == "3" || s(5).substring(14,15) == "4" || s(5).substring(14,15) == "5"))){
-//              s(5) = "eve"
-//            }else{ s(5) = "flat" }
-//            s(0)+","+s(1)+","+s(2)+","+s(3)+","+s(4)+","+s(5)+","+s(15)
-//          }).map(s => s.split(","))
-////      .map(s => s(2)+","+s(5)+","+s(6)).map(s => s.split(",")).groupBy(s => s(0)+","+s(1)).map(s => {
-////          val lineandtime = s._1
-////          val count = s._2.toArray.length
-////          val avg = s._2.toArray.map(s => s(2).toDouble)
-////              lineandtime+","+count+","+avg
-////            }).foreach(println)
-//  .map(s => s(2)+","+s(5)).countByValue().foreach(println)
-////    }
-
-    val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2017-07").map(s => s.split("\t"))
-      .filter(s => s(6) == "204" || s(6) == "369" || s(6) == "M371" || s(6) == "M483" || s(6) == "74")
-      .map(s => {
-        val time = isTime(CustomFormatToISO(s(5)))
-        s(0)+","+s(1)+","+s(6)+","+s(3)+","+s(4)+","+ time + ","+s(15)
-      }).map(s => s.split(","))
-      //      .map(s => s(2)+","+s(5)+","+s(6)).map(s => s.split(",")).groupBy(s => s(0)+","+s(1)).map(s => {
-      //          val lineandtime = s._1
-      //          val count = s._2.toArray.length
-      //          val avg = s._2.toArray.map(s => s(2).toDouble)
-      //              lineandtime+","+count+","+avg
-      //            }).foreach(println)
-      .map(s => s(2)+","+s(5)).countByValue().foreach(println)
+    val sqlContext = new SQLContext(sc)
+    import sqlContext.implicits._
+//    val data = sc.textFile("F:\\北斗\\公交新线开通\\输出文件\\2017-07").map(s => s.split("\t"))
+//      .filter(s => s(6) == "216" || s(6) == "M441" || s(6) == "44" || s(6) == "67" || s(6) == "M204"  || s(6) == "M204" || s(6) == "60" || s(6) == "M312")
+//      .map(s => {
+//        val time = isTime(CustomFormatToISO(s(5)))
+//        s(0)+","+s(1)+","+s(6)+","+s(3)+","+s(4)+","+ time + ","+s(15)
+//      }).map(s => s.split(","))
+//      .map(s => s(2)).countByValue().foreach(println)
+//2017-07-01 00:00:00,0312M,BS04238D,下行,农科中心公交总站,上梅林公交总站,刘思红,2017-07-01 07:00:00.000,2017-07-01 07:31:00.000,2017-07-01 07:01:33.000,2017-07-01 07:31:00.000    
+    val newdata = sc.textFile("F:\\北斗\\五线路调整\\文本文件\\busRound11th.csv").map(s => s.split(","))
+          .filter( s => s(1) == "0312M" || s(1) == "0044" || s(1) == "0060" || s(1) == "0201" || s(1) == "0324" || s(1) == "0204M" || s(1) == "0441M" ).map(s => {
+      val time = isTime(CustomFormatToISO(s(s.length - 4).substring(1,20)))
+      val timeO = CustomFormatToISO(s(s.length - 4).substring(1,20))
+      val timeD = CustomFormatToISO(s(s.length - 3).substring(1,20))
+      val timediff = calTimeDiff(timeO,timeD,60)
+  (s(1),s(s.length - 1),time , timediff)
+    }).toDF("line","direction","isTime","timediff").groupBy("line","direction","isTime").count.show
   }
 }

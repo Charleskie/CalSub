@@ -1,4 +1,6 @@
 package wangsheng.spark
+import java.text.SimpleDateFormat
+
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -70,6 +72,29 @@ object timeformat {
     }
     val changeTime = time.substring(0, 14) + minToString + ":00"
     changeTime
+  }
+
+  /****
+    * 计算时间差,outType为1时，以秒为单位输出，为60时，以分钟为单位输出，为3600时，以小时为单位输出
+    * @param formerDate
+    * @param olderDate
+    * @param outType type: 1->second/60->minute/3600->hour
+    * @return
+    */
+  def calTimeDiff(formerDate: String, olderDate: String, outType: Int): Double = {
+    var time = 0.0
+    if(outType == 60){
+      time = 60F
+    }else if(outType == 1){
+      time = 1F
+    }else if(outType == 3600){
+      time = 3600F
+    }else{
+      println("output timediff type match error")
+    }
+    val sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    val timeDiff = (sdf.parse(olderDate).getTime - sdf.parse(formerDate).getTime) / (time * 1000F) //得到小时为单位
+    timeDiff
   }
   
 }

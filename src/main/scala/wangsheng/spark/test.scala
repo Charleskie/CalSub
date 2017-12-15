@@ -18,11 +18,14 @@ object test {
       **/
     
     val time1 = "2016-06-01 17:49:05"
-    val time2 = "20170602073442"
+    val time2 = "2016-06-01 18:41:05"
     val time = "2012-12-22 09:00:00"
     println(CustomFormatToISO(time))
     println(CustomFormatToISO(time1))
     println(CustomFormatToISO(time2))
+    println(calTimeDiff(CustomFormatToISO(time1),CustomFormatToISO(time2) ,3600))
+    println(calTimeDiff(CustomFormatToISO(time1),CustomFormatToISO(time2) ,60))
+    println(calTimeDiff(CustomFormatToISO(time1),CustomFormatToISO(time2) ,1))
     
   }
 }
